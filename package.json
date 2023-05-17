@@ -11,8 +11,9 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.0",
-    "express": "^4.17.1",
-    "mongoose": "^5.11.7",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^5.13.17",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-helmet": "^6.1.0",
@@ -48,5 +49,18 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.6"
-  }
+  },
+  "description": "",
+  "main": "data.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reyhanfirmanda/self-order.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/reyhanfirmanda/self-order/issues"
+  },
+  "homepage": "https://github.com/reyhanfirmanda/self-order#readme"
 }

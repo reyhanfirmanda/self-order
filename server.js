@@ -6,11 +6,12 @@ const data = require('./data');
 
 dotenv.config();
 const app = express();
+const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect(process.env.MONGODB_URL || 'mongodb://localhost/sokiosk', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/self-order', {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
@@ -95,10 +96,12 @@ app.post('/api/orders', async (req, res) => {
   const order = await Order({ ...req.body, number: lastNumber + 1 }).save();
   res.send(order);
 });
+
 app.get('/api/orders', async (req, res) => {
   const orders = await Order.find({ isDelivered: false, isCanceled: false });
   res.send(orders);
 });
+
 app.put('/api/orders/:id', async (req, res) => {
   const order = await Order.findById(req.params.id);
   if (order) {
@@ -113,9 +116,10 @@ app.put('/api/orders/:id', async (req, res) => {
     await order.save();
     res.send({ message: 'Done' });
   } else {
-    req.status(404).message('Order not found');
+    res.status(404).send('Order not found');
   }
 });
+
 app.get('/api/orders/queue', async (req, res) => {
   const inProgressOrders = await Order.find(
     { inProgress: true, isCanceled: false },
@@ -127,13 +131,34 @@ app.get('/api/orders/queue', async (req, res) => {
   );
   res.send({ inProgressOrders, servingOrders });
 });
+
 app.delete('/api/orders/:id', async (req, res) => {
   const order = await Order.findByIdAndDelete(req.params.id);
   res.send(order);
 });
+
 app.use(express.static(path.join(__dirname, '/build')));
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '/build/index.html'));
 });
-const port = process.env.PORT || 5000;
-app.listen(port, () => console.log(`serve at http://localhost:${port}`));
+
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/self-order', {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useUnifiedTopology: true,
+    });
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
+};
+
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}`);
+  });
+});
