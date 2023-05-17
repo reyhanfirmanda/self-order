@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/self-order', {
+mongoose.connect(process.env.MONGODB_URL || 'mongodb://localhost/self-order', {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
@@ -145,7 +145,7 @@ app.get('*', (req, res) => {
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/self-order', {
+    const conn = await mongoose.connect(process.env.MONGODB_URL || 'mongodb://localhost/self-order', {
       useNewUrlParser: true,
       useCreateIndex: true,
       useUnifiedTopology: true,
